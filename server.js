@@ -33,5 +33,10 @@ io.sockets.on('connection', function (socket) {
 		nick: socket.nickname, 
 		message: data 
 	});
-	});	
+	});
+
+	socket.on('disconnect', function () {
+		if (!socket.nickname) return;
+		nicknames.splice(nicknames.indexOf(socket.nickname), 1);
+	});
 });

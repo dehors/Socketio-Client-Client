@@ -1,6 +1,6 @@
 var http = require('http');
 var fs = require('fs');
-
+var nicknames = [];
 
 var server = http.createServer(function (req, res){
 	fs.readFile('./index.html', function(error, data){
@@ -19,5 +19,13 @@ var io = require('socket.io').listen(server);
 
 
 io.sockets.on('connection', function (socket) {
-io.sockets.emit('Test connection', {ping: 'pong'});  
+
+	io.sockets.emit('Test connection', {ping: 'pong'});
+
+	socket.on('nickname', function (data) {   
+		nicknames.push(data);
+		socket.nickname = data;
+		io.sockets.emit('nicknames', nicknames);   
+	});
+
 });

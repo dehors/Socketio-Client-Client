@@ -22,7 +22,7 @@
       <textarea id="message"></textarea>
       <input type="submit" value="Enviar mensaje" />
     </form>
-    
+    <section id="messages"></section>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>
     <script>
@@ -36,14 +36,23 @@
           $('#nicknames ul').append('<li>' + data[i] + '</li>');
         }
       });
-    
+      socket.on('user message', function (data) {
+        $('#messages').append($('<p>').append($('<strong>').text(data.nick), data.message));
+      });    
+
       $(function () {
         $('#set-nickname').submit(function() {
           socket.emit('nickname', $('#nickname').val());
           $('#set-nickname').hide();
           $('#send-message').show();
           return false;
-        });       
+        });  
+
+        $('#send-message').submit(function () {
+          socket.emit('user message', $('#message').val());
+          $('#message').val('').focus();
+          return false;
+        });     
 
       });
     </script>
